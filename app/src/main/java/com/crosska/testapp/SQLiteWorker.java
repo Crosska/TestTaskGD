@@ -271,6 +271,7 @@ public class SQLiteWorker extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(sql, null);
         int currRow = 0;
+        int skips = 0;
         List<String> resultList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(14);
@@ -280,6 +281,7 @@ public class SQLiteWorker extends SQLiteOpenHelper {
                 if (id != cursor.getInt(14)) {
                     promotes = cursor.getInt(13);
                     id = cursor.getInt(14);
+                    skips = 0;
                 }
                 boolean promoteFail = false;
 
@@ -354,7 +356,24 @@ public class SQLiteWorker extends SQLiteOpenHelper {
                                     }
                                     break;
                             }
+
+                            if (currRow < cursor.getCount()) { // Проверка на конец таблицы
+                                cursor.moveToNext();
+                                if (id == cursor.getInt(14)) { // Проверка на тот же ID что и был
+                                    int power_NEXT = cursor.getInt(4); // Power next
+                                    Log.d("POWER_NEXT", "POWER NEXT = " + power_NEXT);
+                                    cursor.moveToPrevious();
+                                    int power_part = (power_NEXT - cursor.getInt(4)) / cursor.getString(11).split(",").length; // (500 - 300) / 10 = 20
+                                    int power_interpolated = (power_part * (cursor.getInt(13) - 1) + cursor.getInt(4));
+                                    Log.d("POWER_INTERPOLATED", "New power with interpolation = " + power_interpolated);
+                                    card.setPower(power_interpolated);
+                                } else {
+                                    cursor.moveToPrevious();
+                                }
+                            }
+
                         }
+                        skips++;
                         while (currRow < cursor.getCount() && cursor.getInt(14) == id) {
                             Log.d("MOVE_TO_NEXT_ROW", "Move to next row to get to the next id");
                             cursor.moveToNext();
@@ -362,6 +381,7 @@ public class SQLiteWorker extends SQLiteOpenHelper {
                         }
                     } else if (promotes > card.getPromoteValues().size()) {
                         promotes = promotes - card.getPromoteValues().size();
+                        skips++;
                     }
                 }
                 if (promotes == 1) {
@@ -376,7 +396,6 @@ public class SQLiteWorker extends SQLiteOpenHelper {
                     s.append(card.getSkillsNames().get(j)).append(" - ").append(card.getSkillsValues().get(j)).append("\n");
                 }
                 resultList.add("--- CARD ---\nRarity: " + card.getRarity() + "\nRace: " + card.getRace() + "\nClass: " + card.getClass_() + "\nGender: " + card.getGender() + "\nPower: " + card.getPower() + "\nImage: " + card.getImage() + "\nEvent: " + card.isEvent() + "\nType: " + (warlordsId.contains(card.getId()) ? "Warlord" : "Handed card") + "\n\nHP: " + card.getHp() + "\nAttack: " + card.getAttack() + "\nSkills:\n" + s.toString());
-                Log.d("MOVE_TO_NEXT_ROW", "Move to next row after finished with card");
             } while (currRow < cursor.getCount());
         }
 
