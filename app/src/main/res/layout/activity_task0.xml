@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="Колоды"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:layout_weight="50"
+        android:backgroundTint="@color/design_default_color_primary"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="15dp">
+
+        <ListView
+            android:textAppearance="@style/ListViewTextStyle"
+            android:id="@+id/task0Listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingBottom="5dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/task0PrevButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="50"
+            android:backgroundTint="@color/design_default_color_primary_dark"
+            android:onClick="task0PrevBtnClicked"
+            android:padding="10dp"
+            android:text="Предыдущая"
+            app:cardElevation="15dp"
+            app:cornerRadius="15dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/task0NextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:backgroundTint="@color/design_default_color_primary_dark"
+            android:onClick="task0NextBtnClicked"
+            android:padding="10dp"
+            android:text="Следующая"
+            app:cardElevation="15dp"
+            app:cornerRadius="15dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
